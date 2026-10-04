@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Dashboard } from './components/Dashboard';
 import { TradeJournal } from './components/TradeJournal';
+import { NewsFeed } from './components/NewsFeed';
 import { VipSignals } from './components/VipSignals';
 import { Watchlist } from './components/Watchlist';
 import { AdvancedAnalytics } from './components/AdvancedAnalytics';
@@ -11,9 +12,11 @@ import { Community } from './components/Community';
 import { Affiliates } from './components/Affiliates';
 import { PositionCalculator } from './components/PositionCalculator';
 import { ProfileSettings } from './components/ProfileSettings';
+import { CommandPalette } from './components/CommandPalette';
 import {
   LayoutDashboard,
   BookOpen,
+  Newspaper,
   Zap,
   Activity,
   BarChart3,
@@ -24,24 +27,27 @@ import {
   Award,
   Calculator,
   Settings,
-  TrendingUp
+  TrendingUp,
+  Command
 } from 'lucide-react';
 
-type TabType = 'dashboard' | 'journal' | 'vipsignals' | 'watchlist' | 'analytics' | 'backtester' | 'aicoaching' | 'academy' | 'community' | 'affiliates' | 'calculator' | 'profile';
+type TabType = 'dashboard' | 'journal' | 'news' | 'vipsignals' | 'watchlist' | 'analytics' | 'backtester' | 'aicoaching' | 'academy' | 'community' | 'affiliates' | 'calculator' | 'profile';
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
+  const [isCommandOpen, setIsCommandOpen] = useState(false);
 
   const mainNavItems: { id: TabType; label: string; icon: React.ReactNode; gold?: boolean }[] = [
-    { id: 'dashboard', label: 'Executive Dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { id: 'dashboard', label: 'Executive HUD', icon: <LayoutDashboard className="w-4 h-4" /> },
     { id: 'vipsignals', label: 'VIP Signals', icon: <Zap className="w-4 h-4 text-amber-400" />, gold: true },
-    { id: 'journal', label: 'Trade Journal', icon: <BookOpen className="w-4 h-4" /> },
+    { id: 'news', label: 'Macro News', icon: <Newspaper className="w-4 h-4 text-amber-400" /> },
+    { id: 'journal', label: 'Fast Journal', icon: <BookOpen className="w-4 h-4" /> },
+    { id: 'community', label: 'Leaderboard', icon: <Trophy className="w-4 h-4" /> },
     { id: 'watchlist', label: 'Live Markets', icon: <Activity className="w-4 h-4" /> },
-    { id: 'analytics', label: 'Analytics', icon: <BarChart3 className="w-4 h-4" /> },
+    { id: 'analytics', label: 'Analytics & Evaluator', icon: <BarChart3 className="w-4 h-4" /> },
     { id: 'aicoaching', label: 'AI Coach', icon: <Sparkles className="w-4 h-4 text-indigo-400" /> },
     { id: 'backtester', label: 'Backtester', icon: <Cpu className="w-4 h-4" /> },
     { id: 'academy', label: 'Academy', icon: <GraduationCap className="w-4 h-4 text-amber-400" /> },
-    { id: 'community', label: 'Leaderboard', icon: <Trophy className="w-4 h-4" /> },
     { id: 'affiliates', label: 'Partners', icon: <Award className="w-4 h-4 text-amber-400" /> },
     { id: 'calculator', label: 'Sizer', icon: <Calculator className="w-4 h-4" /> },
     { id: 'profile', label: 'Settings', icon: <Settings className="w-4 h-4" /> },
@@ -50,9 +56,9 @@ export const App: React.FC = () => {
   const mobileBottomItems: { id: TabType; label: string; icon: React.ReactNode }[] = [
     { id: 'dashboard', label: 'Overview', icon: <LayoutDashboard className="w-5 h-5" /> },
     { id: 'vipsignals', label: 'VIP Signals', icon: <Zap className="w-5 h-5 text-amber-400" /> },
+    { id: 'news', label: 'News', icon: <Newspaper className="w-5 h-5 text-amber-400" /> },
     { id: 'journal', label: 'Journal', icon: <BookOpen className="w-5 h-5" /> },
-    { id: 'watchlist', label: 'Markets', icon: <Activity className="w-5 h-5" /> },
-    { id: 'aicoaching', label: 'AI Coach', icon: <Sparkles className="w-5 h-5" /> },
+    { id: 'community', label: 'Leaderboard', icon: <Trophy className="w-5 h-5" /> },
   ];
 
   return (
@@ -77,25 +83,36 @@ export const App: React.FC = () => {
             </div>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1 bg-slate-950/80 border border-slate-800 p-1.5 rounded-2xl text-xs font-medium overflow-x-auto">
-            {mainNavItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all shrink-0 ${
-                  activeTab === item.id
-                    ? item.gold
-                      ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold shadow-md shadow-amber-950/40'
-                      : 'bg-slate-800 text-amber-400 font-semibold shadow-md border border-slate-700/60'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/50'
-                }`}
-              >
-                {item.icon}
-                <span>{item.label}</span>
-              </button>
-            ))}
-          </nav>
+          <div className="flex items-center gap-2">
+            {/* Quick Command Launcher Button */}
+            <button
+              onClick={() => setIsCommandOpen(true)}
+              className="bg-slate-950 hover:bg-slate-800 text-slate-300 border border-slate-800 px-3 py-1.5 rounded-xl text-xs font-mono flex items-center gap-2 transition-all shadow-md"
+            >
+              <Command className="w-3.5 h-3.5 text-amber-400" />
+              <span className="hidden sm:inline">Cmd+K Search</span>
+            </button>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center gap-1 bg-slate-950/80 border border-slate-800 p-1.5 rounded-2xl text-xs font-medium overflow-x-auto">
+              {mainNavItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all shrink-0 ${
+                    activeTab === item.id
+                      ? item.gold
+                        ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold shadow-md shadow-amber-950/40'
+                        : 'bg-slate-800 text-amber-400 font-semibold shadow-md border border-slate-700/60'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/50'
+                  }`}
+                >
+                  {item.icon}
+                  <span>{item.label}</span>
+                </button>
+              ))}
+            </nav>
+          </div>
         </div>
       </header>
 
@@ -103,6 +120,7 @@ export const App: React.FC = () => {
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {activeTab === 'dashboard' && <Dashboard />}
         {activeTab === 'vipsignals' && <VipSignals />}
+        {activeTab === 'news' && <NewsFeed />}
         {activeTab === 'journal' && <TradeJournal />}
         {activeTab === 'watchlist' && <Watchlist />}
         {activeTab === 'analytics' && <AdvancedAnalytics />}
@@ -114,6 +132,13 @@ export const App: React.FC = () => {
         {activeTab === 'calculator' && <PositionCalculator />}
         {activeTab === 'profile' && <ProfileSettings />}
       </main>
+
+      {/* Command Palette Modal */}
+      <CommandPalette
+        isOpen={isCommandOpen}
+        onClose={() => setIsCommandOpen(false)}
+        onSelectTab={(tab) => setActiveTab(tab)}
+      />
 
       {/* Mobile Bottom Bar */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 border-t border-slate-800 backdrop-blur-xl px-2 py-2 z-50 flex justify-around items-center shadow-2xl">
