@@ -32,8 +32,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Fix binary permissions
-        run: chmod -R +x node_modules/.bin || true
+      - name: Fix all binary permissions
+        run: chmod -R +x node_modules/ || true
 
       - name: Build Vite App
         run: npm run build
