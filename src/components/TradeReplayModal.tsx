@@ -31,7 +31,7 @@ export const TradeReplayModal: React.FC<TradeReplayModalProps> = ({ trade, onClo
   });
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
+    let timer: any;
     if (isPlaying) {
       timer = setInterval(() => {
         setCurrentStep((prev) => {
