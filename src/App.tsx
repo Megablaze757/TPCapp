@@ -16,49 +16,26 @@ import { CommandPalette } from './components/CommandPalette';
 import {
   LayoutDashboard,
   BookOpen,
-  Newspaper,
-  Zap,
   Activity,
-  BarChart3,
-  Cpu,
   Sparkles,
-  GraduationCap,
   Trophy,
-  Award,
-  Calculator,
-  Settings,
   TrendingUp,
   Command
 } from 'lucide-react';
 
-type TabType = 'dashboard' | 'journal' | 'news' | 'vipsignals' | 'watchlist' | 'analytics' | 'backtester' | 'aicoaching' | 'academy' | 'community' | 'affiliates' | 'calculator' | 'profile';
+type SectionType = 'terminal' | 'journal' | 'markets' | 'ai' | 'community';
 
 export const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<TabType>('dashboard');
+  const [activeSection, setActiveSection] = useState<SectionType>('terminal');
+  const [subTab, setSubTab] = useState<string>('default');
   const [isCommandOpen, setIsCommandOpen] = useState(false);
 
-  const mainNavItems: { id: TabType; label: string; icon: React.ReactNode; gold?: boolean }[] = [
-    { id: 'dashboard', label: 'Executive HUD', icon: <LayoutDashboard className="w-4 h-4" /> },
-    { id: 'vipsignals', label: 'VIP Signals', icon: <Zap className="w-4 h-4 text-amber-400" />, gold: true },
-    { id: 'news', label: 'Macro News', icon: <Newspaper className="w-4 h-4 text-amber-400" /> },
-    { id: 'journal', label: 'Fast Journal', icon: <BookOpen className="w-4 h-4" /> },
-    { id: 'community', label: 'Leaderboard', icon: <Trophy className="w-4 h-4" /> },
-    { id: 'watchlist', label: 'Live Markets', icon: <Activity className="w-4 h-4" /> },
-    { id: 'analytics', label: 'Analytics & Evaluator', icon: <BarChart3 className="w-4 h-4" /> },
-    { id: 'aicoaching', label: 'AI Coach', icon: <Sparkles className="w-4 h-4 text-indigo-400" /> },
-    { id: 'backtester', label: 'Backtester', icon: <Cpu className="w-4 h-4" /> },
-    { id: 'academy', label: 'Academy', icon: <GraduationCap className="w-4 h-4 text-amber-400" /> },
-    { id: 'affiliates', label: 'Partners', icon: <Award className="w-4 h-4 text-amber-400" /> },
-    { id: 'calculator', label: 'Sizer', icon: <Calculator className="w-4 h-4" /> },
-    { id: 'profile', label: 'Settings', icon: <Settings className="w-4 h-4" /> },
-  ];
-
-  const mobileBottomItems: { id: TabType; label: string; icon: React.ReactNode }[] = [
-    { id: 'dashboard', label: 'Overview', icon: <LayoutDashboard className="w-5 h-5" /> },
-    { id: 'vipsignals', label: 'VIP Signals', icon: <Zap className="w-5 h-5 text-amber-400" /> },
-    { id: 'news', label: 'News', icon: <Newspaper className="w-5 h-5 text-amber-400" /> },
-    { id: 'journal', label: 'Journal', icon: <BookOpen className="w-5 h-5" /> },
-    { id: 'community', label: 'Leaderboard', icon: <Trophy className="w-5 h-5" /> },
+  const simplifiedMenu: { id: SectionType; label: string; icon: React.ReactNode }[] = [
+    { id: 'terminal', label: 'Terminal', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { id: 'journal', label: 'Trade Journal', icon: <BookOpen className="w-4 h-4" /> },
+    { id: 'markets', label: 'Markets & News', icon: <Activity className="w-4 h-4" /> },
+    { id: 'ai', label: 'AI & Analytics', icon: <Sparkles className="w-4 h-4 text-indigo-400" /> },
+    { id: 'community', label: 'Community & VIP', icon: <Trophy className="w-4 h-4 text-amber-400" /> },
   ];
 
   return (
@@ -93,17 +70,18 @@ export const App: React.FC = () => {
               <span className="hidden sm:inline">Cmd+K Search</span>
             </button>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-1 bg-slate-950/80 border border-slate-800 p-1.5 rounded-2xl text-xs font-medium overflow-x-auto">
-              {mainNavItems.map((item) => (
+            {/* SIMPLIFIED 5 CORE MENU TABS */}
+            <nav className="hidden md:flex items-center gap-1.5 bg-slate-950/80 border border-slate-800 p-1.5 rounded-2xl text-xs font-medium">
+              {simplifiedMenu.map((item) => (
                 <button
                   key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all shrink-0 ${
-                    activeTab === item.id
-                      ? item.gold
-                        ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold shadow-md shadow-amber-950/40'
-                        : 'bg-slate-800 text-amber-400 font-semibold shadow-md border border-slate-700/60'
+                  onClick={() => {
+                    setActiveSection(item.id);
+                    setSubTab('default');
+                  }}
+                  className={`flex items-center gap-2 px-3.5 py-2 rounded-xl transition-all shrink-0 ${
+                    activeSection === item.id
+                      ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black shadow-md shadow-amber-950/40'
                       : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/50'
                   }`}
                 >
@@ -117,37 +95,132 @@ export const App: React.FC = () => {
       </header>
 
       {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        {activeTab === 'dashboard' && <Dashboard />}
-        {activeTab === 'vipsignals' && <VipSignals />}
-        {activeTab === 'news' && <NewsFeed />}
-        {activeTab === 'journal' && <TradeJournal />}
-        {activeTab === 'watchlist' && <Watchlist />}
-        {activeTab === 'analytics' && <AdvancedAnalytics />}
-        {activeTab === 'backtester' && <Backtester />}
-        {activeTab === 'aicoaching' && <AICoaching />}
-        {activeTab === 'academy' && <Academy />}
-        {activeTab === 'community' && <Community />}
-        {activeTab === 'affiliates' && <Affiliates />}
-        {activeTab === 'calculator' && <PositionCalculator />}
-        {activeTab === 'profile' && <ProfileSettings />}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
+        {/* Section Sub-Navigation Header */}
+        {activeSection === 'markets' && (
+          <div className="flex items-center gap-2 bg-slate-900/80 border border-slate-800 p-1.5 rounded-xl text-xs font-mono w-fit">
+            <button
+              onClick={() => setSubTab('default')}
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${subTab === 'default' ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-slate-200'}`}
+            >
+              Live Watchlist & Tickers
+            </button>
+            <button
+              onClick={() => setSubTab('news')}
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${subTab === 'news' ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-slate-200'}`}
+            >
+              Macro News Feed
+            </button>
+          </div>
+        )}
+
+        {activeSection === 'ai' && (
+          <div className="flex items-center gap-2 bg-slate-900/80 border border-slate-800 p-1.5 rounded-xl text-xs font-mono w-fit">
+            <button
+              onClick={() => setSubTab('default')}
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${subTab === 'default' ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-slate-200'}`}
+            >
+              Groq AI Coach
+            </button>
+            <button
+              onClick={() => setSubTab('analytics')}
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${subTab === 'analytics' ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-slate-200'}`}
+            >
+              What-If Evaluator & Analytics
+            </button>
+            <button
+              onClick={() => setSubTab('backtest')}
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${subTab === 'backtest' ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-slate-200'}`}
+            >
+              Strategy Backtester
+            </button>
+          </div>
+        )}
+
+        {activeSection === 'community' && (
+          <div className="flex items-center gap-2 bg-slate-900/80 border border-slate-800 p-1.5 rounded-xl text-xs font-mono w-fit overflow-x-auto">
+            <button
+              onClick={() => setSubTab('default')}
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${subTab === 'default' ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-slate-200'}`}
+            >
+              VIP Signals
+            </button>
+            <button
+              onClick={() => setSubTab('leaderboard')}
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${subTab === 'leaderboard' ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-slate-200'}`}
+            >
+              Leaderboard
+            </button>
+            <button
+              onClick={() => setSubTab('academy')}
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${subTab === 'academy' ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-slate-200'}`}
+            >
+              Academy Playbooks
+            </button>
+            <button
+              onClick={() => setSubTab('partners')}
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${subTab === 'partners' ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-slate-200'}`}
+            >
+              Brokers & Prop Firms
+            </button>
+            <button
+              onClick={() => setSubTab('sizer')}
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${subTab === 'sizer' ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-slate-200'}`}
+            >
+              Position Sizer
+            </button>
+            <button
+              onClick={() => setSubTab('settings')}
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${subTab === 'settings' ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-slate-200'}`}
+            >
+              Settings
+            </button>
+          </div>
+        )}
+
+        {/* Tab Routing Body */}
+        {activeSection === 'terminal' && <Dashboard />}
+        {activeSection === 'journal' && <TradeJournal />}
+        
+        {activeSection === 'markets' && subTab === 'default' && <Watchlist />}
+        {activeSection === 'markets' && subTab === 'news' && <NewsFeed />}
+
+        {activeSection === 'ai' && subTab === 'default' && <AICoaching />}
+        {activeSection === 'ai' && subTab === 'analytics' && <AdvancedAnalytics />}
+        {activeSection === 'ai' && subTab === 'backtest' && <Backtester />}
+
+        {activeSection === 'community' && subTab === 'default' && <VipSignals />}
+        {activeSection === 'community' && subTab === 'leaderboard' && <Community />}
+        {activeSection === 'community' && subTab === 'academy' && <Academy />}
+        {activeSection === 'community' && subTab === 'partners' && <Affiliates />}
+        {activeSection === 'community' && subTab === 'sizer' && <PositionCalculator />}
+        {activeSection === 'community' && subTab === 'settings' && <ProfileSettings />}
       </main>
 
       {/* Command Palette Modal */}
       <CommandPalette
         isOpen={isCommandOpen}
         onClose={() => setIsCommandOpen(false)}
-        onSelectTab={(tab) => setActiveTab(tab)}
+        onSelectTab={(section) => {
+          if (['dashboard', 'terminal'].includes(section)) setActiveSection('terminal');
+          else if (section === 'journal') setActiveSection('journal');
+          else if (['watchlist', 'news'].includes(section)) { setActiveSection('markets'); setSubTab(section === 'news' ? 'news' : 'default'); }
+          else if (['analytics', 'aicoaching', 'backtester'].includes(section)) { setActiveSection('ai'); setSubTab(section === 'analytics' ? 'analytics' : section === 'backtester' ? 'backtest' : 'default'); }
+          else { setActiveSection('community'); setSubTab(section === 'vipsignals' ? 'default' : section); }
+        }}
       />
 
       {/* Mobile Bottom Bar */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 border-t border-slate-800 backdrop-blur-xl px-2 py-2 z-50 flex justify-around items-center shadow-2xl">
-        {mobileBottomItems.map((item) => (
+        {simplifiedMenu.map((item) => (
           <button
             key={item.id}
-            onClick={() => setActiveTab(item.id)}
+            onClick={() => {
+              setActiveSection(item.id);
+              setSubTab('default');
+            }}
             className={`flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all text-[10px] font-medium min-w-[60px] ${
-              activeTab === item.id
+              activeSection === item.id
                 ? 'text-amber-400 bg-amber-500/10 font-bold'
                 : 'text-slate-400 hover:text-slate-200'
             }`}
