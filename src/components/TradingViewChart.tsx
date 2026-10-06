@@ -5,7 +5,7 @@ interface TradingViewChartProps {
   height?: number;
 }
 
-export const TradingViewChart: React.FC<TradingViewChartProps> = ({ symbol = 'BINANCE:BTCUSDT', height = 400 }) => {
+export const TradingViewChart: React.FC<TradingViewChartProps> = ({ symbol = 'BINANCE:BTCUSDT', height = 450 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -34,8 +34,11 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({ symbol = 'BI
   }, [symbol]);
 
   return (
-    <div className="w-full bg-slate-900 border border-slate-800/80 rounded-2xl overflow-hidden shadow-2xl p-1">
-      <div className="tradingview-widget-container" ref={containerRef} style={{ height: `${height}px`, width: '100%' }} />
+    <div className="w-full bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl relative">
+      <div
+        className="tradingview-widget-container w-full min-h-[400px] h-[450px]"
+        ref={containerRef}
+      />
     </div>
   );
 };

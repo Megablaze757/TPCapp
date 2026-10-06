@@ -2,8 +2,9 @@ import React from 'react';
 import { useTradeStore } from '../store/useTradeStore';
 import { TradingViewChart } from './TradingViewChart';
 import { EconomicCalendar } from './EconomicCalendar';
+import { PropFirmTracker } from './PropFirmTracker';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
-import { TrendingUp, TrendingDown, Percent, Award, ShieldAlert, Zap } from 'lucide-react';
+import { TrendingUp, TrendingDown, Percent, Award, ShieldAlert, Zap, Flame, Trophy } from 'lucide-react';
 
 export const Dashboard: React.FC = () => {
   const { trades, profile } = useTradeStore();
@@ -34,28 +35,36 @@ export const Dashboard: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-6">
-      {/* Top Banner */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-4">
+    <div className="space-y-8">
+      {/* Top Gamified Trader Level Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-800/80 pb-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-100 flex items-center gap-2">
-            <Zap className="w-6 h-6 text-emerald-400 fill-emerald-500/20" /> Pro Trader Executive Dashboard
+          <div className="flex items-center gap-2 mb-1">
+            <span className="bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[11px] font-mono font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1">
+              <Trophy className="w-3 h-3 text-amber-400 fill-current" /> LEVEL 12 GOLD MASTER • 2,450 XP
+            </span>
+          </div>
+          <h1 className="text-2xl font-black tracking-tight text-slate-100 flex items-center gap-2">
+            <Zap className="w-6 h-6 text-amber-400 fill-amber-400/20" /> Executive Cyber Trading HUD
           </h1>
-          <p className="text-sm text-slate-400">Real-time portfolio metrics, live charts, and macro event calendar.</p>
         </div>
-        <div className="bg-slate-900/90 border border-slate-800 rounded-xl px-4 py-2 text-sm text-slate-300 font-mono shadow-md">
-          Account Balance: <span className="font-bold text-emerald-400">${(profile.startingCapital + totalPnl).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl px-5 py-2.5 text-sm text-slate-300 font-mono shadow-xl flex items-center gap-3">
+          <span className="text-slate-500 text-xs uppercase">Account Equity:</span>
+          <span className="font-black text-xl text-emerald-400">${(profile.startingCapital + totalPnl).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
         </div>
       </div>
 
+      {/* Prop Firm Evaluation Guardrails */}
+      <PropFirmTracker />
+
       {/* Executive KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-slate-900/80 border border-slate-800/80 rounded-2xl p-5 shadow-xl hover:border-slate-700 transition-all">
+        <div className="bg-slate-900/80 border border-slate-800/80 rounded-2xl p-5 shadow-xl hover:border-amber-500/30 transition-all">
           <div className="flex justify-between items-center text-slate-400 mb-2">
             <span className="text-xs font-semibold uppercase tracking-wider">Net Realized P&L</span>
             {totalPnl >= 0 ? <TrendingUp className="w-5 h-5 text-emerald-400" /> : <TrendingDown className="w-5 h-5 text-rose-400" />}
           </div>
-          <div className={`text-2xl sm:text-3xl font-bold font-mono ${totalPnl >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+          <div className={`text-2xl sm:text-3xl font-extrabold font-mono ${totalPnl >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
             {totalPnl >= 0 ? '+' : ''}${totalPnl.toLocaleString('en-US', { minimumFractionDigits: 2 })}
           </div>
           <div className="text-xs text-slate-500 mt-1 font-mono">
@@ -63,12 +72,12 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-slate-900/80 border border-slate-800/80 rounded-2xl p-5 shadow-xl hover:border-slate-700 transition-all">
+        <div className="bg-slate-900/80 border border-slate-800/80 rounded-2xl p-5 shadow-xl hover:border-amber-500/30 transition-all">
           <div className="flex justify-between items-center text-slate-400 mb-2">
             <span className="text-xs font-semibold uppercase tracking-wider">Win Rate</span>
             <Percent className="w-5 h-5 text-teal-400" />
           </div>
-          <div className="text-2xl sm:text-3xl font-bold font-mono text-slate-100">
+          <div className="text-2xl sm:text-3xl font-extrabold font-mono text-slate-100">
             {winRate.toFixed(1)}%
           </div>
           <div className="text-xs text-slate-500 mt-1 font-mono">
@@ -76,12 +85,12 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-slate-900/80 border border-slate-800/80 rounded-2xl p-5 shadow-xl hover:border-slate-700 transition-all">
+        <div className="bg-slate-900/80 border border-slate-800/80 rounded-2xl p-5 shadow-xl hover:border-amber-500/30 transition-all">
           <div className="flex justify-between items-center text-slate-400 mb-2">
             <span className="text-xs font-semibold uppercase tracking-wider">Profit Factor</span>
             <Award className="w-5 h-5 text-amber-400" />
           </div>
-          <div className="text-2xl sm:text-3xl font-bold font-mono text-amber-400">
+          <div className="text-2xl sm:text-3xl font-extrabold font-mono text-amber-400">
             {profitFactor.toFixed(2)}
           </div>
           <div className="text-xs text-slate-500 mt-1 font-mono">
@@ -89,12 +98,12 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-slate-900/80 border border-slate-800/80 rounded-2xl p-5 shadow-xl hover:border-slate-700 transition-all">
+        <div className="bg-slate-900/80 border border-slate-800/80 rounded-2xl p-5 shadow-xl hover:border-amber-500/30 transition-all">
           <div className="flex justify-between items-center text-slate-400 mb-2">
             <span className="text-xs font-semibold uppercase tracking-wider">Avg Win / Loss</span>
             <ShieldAlert className="w-5 h-5 text-indigo-400" />
           </div>
-          <div className="text-xl sm:text-2xl font-bold font-mono text-slate-100">
+          <div className="text-xl sm:text-2xl font-extrabold font-mono text-slate-100">
             <span className="text-emerald-400">${avgWin.toFixed(0)}</span> / <span className="text-rose-400">${avgLoss.toFixed(0)}</span>
           </div>
           <div className="text-xs text-slate-500 mt-1 font-mono">
@@ -103,41 +112,43 @@ export const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Grid Layout: Equity Curve + TradingView Chart */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Equity Curve Chart */}
-        <div className="bg-slate-900/80 border border-slate-800/80 rounded-2xl p-6 shadow-xl">
-          <h2 className="text-lg font-semibold text-slate-200 mb-4">Cumulative Equity Growth</h2>
-          <div className="h-80 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={equityData}>
-                <defs>
-                  <linearGradient id="equityGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.4}/>
-                    <stop offset="95%" stopColor="#10b981" stopOpacity={0.0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                <XAxis dataKey="name" stroke="#64748b" />
-                <YAxis stroke="#64748b" domain={['auto', 'auto']} />
-                <Tooltip
-                  contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', color: '#f8fafc' }}
-                  formatter={(value: any) => [`$${Number(value).toLocaleString()}`, 'Equity']}
-                />
-                <Area type="monotone" dataKey="equity" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#equityGradient)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
+      {/* Full Width Live TradingView Chart Row (Perfect Layout Fix) */}
+      <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-4">
+        <div className="flex justify-between items-center">
+          <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2">
+            <Zap className="w-5 h-5 text-amber-400 fill-amber-400/20" /> Pro Terminal Interactive TradingView Chart
+          </h2>
+          <span className="text-xs text-slate-500 font-mono">XAUUSD / BTCUSDT Real-time Stream</span>
         </div>
+        <TradingViewChart symbol="BINANCE:BTCUSDT" height={450} />
+      </div>
 
-        {/* Embedded TradingView Pro Chart */}
-        <div className="bg-slate-900/80 border border-slate-800/80 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
-          <h2 className="text-lg font-semibold text-slate-200 mb-4">Live Interactive TradingView Chart</h2>
-          <TradingViewChart symbol="BINANCE:BTCUSDT" height={320} />
+      {/* Equity Curve Chart */}
+      <div className="bg-slate-900/80 border border-slate-800/80 rounded-2xl p-6 shadow-xl">
+        <h2 className="text-lg font-semibold text-slate-200 mb-4">Cumulative Equity Growth Curve</h2>
+        <div className="h-72 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={equityData}>
+              <defs>
+                <linearGradient id="equityGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.4}/>
+                  <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.0}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+              <XAxis dataKey="name" stroke="#64748b" />
+              <YAxis stroke="#64748b" domain={['auto', 'auto']} />
+              <Tooltip
+                contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', color: '#f8fafc' }}
+                formatter={(value: any) => [`$${Number(value).toLocaleString()}`, 'Equity']}
+              />
+              <Area type="monotone" dataKey="equity" stroke="#f59e0b" strokeWidth={2} fillOpacity={1} fill="url(#equityGradient)" />
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
       </div>
 
-      {/* High Impact Economic Calendar */}
+      {/* Macro Economic Calendar */}
       <EconomicCalendar />
     </div>
   );
